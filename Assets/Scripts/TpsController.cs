@@ -39,6 +39,12 @@ private Transform _lookAtPlayer;
     [SerializeField] private AxisState xAxis;
     [SerializeField] private AxisState yAxis;
 
+    //----------Camaras----------
+
+    [SerializeField] private GameObject _normalCamera;
+
+    [SerializeField] private GameObject _aimCamera;
+
     
 
 
@@ -60,6 +66,18 @@ private Transform _lookAtPlayer;
     {
           _horizontal = Input.GetAxis("Horizontal");
         _vertical = Input.GetAxis("Vertical");
+
+        if(Input.GetButtonDown("Fire2"))
+        {
+            _normalCamera.SetActive(false);
+            _aimCamera.SetActive(true);
+        }
+        else if(Input.GetButtonUp("Fire2"))
+        {
+            _normalCamera.SetActive(true);
+            _aimCamera.SetActive(false);
+        }
+
 
         //AimMovement();
         Movement();
