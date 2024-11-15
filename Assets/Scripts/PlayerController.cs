@@ -74,8 +74,9 @@ private Transform _camera;
 
         if(Input.GetButtonDown("Jump") && IsGrounded())
         {
-            _animator.SetBool("IsJumping", true);
             Jump();
+            _animator.SetBool("IsJumping", true);
+            
         }
 
         if(Input.GetButton("Fire2"))
@@ -147,7 +148,7 @@ private Transform _camera;
     {
         if(!IsGrounded())
         {
-                    
+                    _animator.SetBool("IsJumping", true);
 
              _playerGravity.y += _gravity * Time.deltaTime;
         }
