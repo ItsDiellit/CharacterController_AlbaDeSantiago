@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     //---------componentes
     private CharacterController _controller;
-
+     private Animator _animator;
     //--------Inputs
 
     private float _horizontal;
@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpHeight = 1;
 
 private Transform _camera;
+
+
 
     //---------Cosas gravedad
 
@@ -44,7 +46,8 @@ private Transform _camera;
 
     private Vector3 moveDirection;
 
-    
+    private bool IsJumping;
+   
 
 
 
@@ -52,6 +55,7 @@ private Transform _camera;
     {
         _controller = GetComponent<CharacterController>();
         _camera = Camera.main.transform;
+        _animator = GetComponentInChildren<Animator>();
     }
     // Start is called before the first frame update
     void Start()
@@ -70,6 +74,7 @@ private Transform _camera;
 
         if(Input.GetButtonDown("Jump") && IsGrounded())
         {
+            _animator.SetBool("IsJumping", true);
             Jump();
         }
 
@@ -95,6 +100,9 @@ private Transform _camera;
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
 
+        _animator.SetFloat("VelZ", direction.magnitude);
+        _animator.SetFloat("VelX", 0);
+
         if(direction != Vector3.zero)
         {
               float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
@@ -115,6 +123,8 @@ private Transform _camera;
         
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
 
+        _animator.SetFloat("VelZ",_vertical);
+        _animator.SetFloat("VelX",_horizontal);
         
               float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
               float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, _camera.eulerAngles.y, ref _turnSmoothVelocity, _turnSmoothTime);
@@ -137,11 +147,14 @@ private Transform _camera;
     {
         if(!IsGrounded())
         {
+                    
+
              _playerGravity.y += _gravity * Time.deltaTime;
         }
        
         else if(IsGrounded() && _playerGravity.y < 0)
         {
+             _animator.SetBool("IsJumping", false);
             _playerGravity.y = -1;
         }
         _controller.Move(_playerGravity * Time.deltaTime);
